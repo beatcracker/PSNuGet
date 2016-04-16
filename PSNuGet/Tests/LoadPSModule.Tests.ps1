@@ -1,30 +1,33 @@
-﻿
-TestFixture "Install NuGet Package(Load PSModule under /tools)"{
+﻿$here = Split-Path -Parent $MyInvocation.MyCommand.Path
+Import-Module -Name "$here\..\..\PSNuGet"
 
-    TestCase "Pester"{
+Describe "Install NuGet Package(Load PSModule under /tools)" {
+    <#
+    It "Install Pester"{
         Use-NuGetPackage -PackageId "Pester"
-        Get-Module Pester | should not be null
+        Get-Module Pester | Should Not BeNullOrEmpty
     }
 
-    TestCase "PShould"{
+    It "Install PShould"{
         Use-NuGetPackage -PackageId "PShould"
-        Get-Module PShould | should not be null
+        Get-Module PShould | Should Not BeNullOrEmpty
     }
+    #>
 
-    TestCase "PSMock"{
+    It "Install PSMock"{
         Use-NuGetPackage -PackageId "PSMock"
-        Get-Module PSMock | should not be null
+        Get-Module PSMock | Should Not BeNullOrEmpty
     }
 
-    TestCase "PSate"{
+    <#
+    It "Install PSate"{
         Use-NuGetPackage -PackageId "PSate"
-        Get-Module PSate | should not be null
+        Get-Module PSate | Should Not BeNullOrEmpty
     }
+    #>
 
-    TestCase "PSake"{
+    It "Install PSake"{
         Use-NuGetPackage -PackageId "PSake"
-        Get-Module PSake | should not be null
+        Get-Module PSake | Should Not BeNullOrEmpty
     }
 }
-
-

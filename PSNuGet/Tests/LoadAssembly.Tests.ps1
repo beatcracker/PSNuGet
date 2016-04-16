@@ -1,88 +1,85 @@
-﻿
+﻿$here = Split-Path -Parent $MyInvocation.MyCommand.Path
+Import-Module -Name "$here\..\..\PSNuGet"
 
-TestFixture "Install NuGet Package(.NET)"{
+#region Helper methods
+function IsAssemblyLoaded
+{
+    [OutputType([bool])]
+    param (
+        [Parameter(Mandatory)]
+        [string] $AssemblyName,
+        [ValidateSet("3.0", "4.0", "4.5", "4.5.1")]
+        [string] $Version
+    )
+    $loadedAssemblyNames = [AppDomain]::CurrentDomain.GetAssemblies().GetName()
+    [bool] $result = $loadedAssemblyNames.Name.Contains($AssemblyName)
 
-    #region Helper methods
-    function IsAssemblyLoaded
-    {
-        [OutputType([bool])]
-        param (
-            [Parameter(Mandatory)]
-            [string] $AssemblyName,
-            [ValidateSet("3.0", "4.0", "4.5", "4.5.1")]
-            [string] $Version
-        )
-        $loadedAssemblyNames = [AppDomain]::CurrentDomain.GetAssemblies().GetName()
-        [bool] $result = $loadedAssemblyNames.Name.Contains($AssemblyName)
-
-        if ($result -and ![String]::IsNullOrEmpty($Version)){
-            #TODO:VersionCheck
-        }
-
-        return $result
-    }
-    #endregion
-
-    TestCase "RazorMachine"{
-        Use-NuGetPackage -PackageId "RazorMachine"
-        IsAssemblyLoaded ("Xipton.Razor") | should be $true
-        IsAssemblyLoaded ("System.Web.Razor") | should be $true
-
-    }
-    
-    TestCase "ClosedXML"{
-        Use-NuGetPackage -PackageId "ClosedXML"
-        IsAssemblyLoaded ("DocumentFormat.OpenXml") | should be $true
-        IsAssemblyLoaded ("ClosedXML") | should be $true
-    }
-    
-    TestCase "Windows7APICodePack-Shell"{
-        Use-NuGetPackage -PackageId "Windows7APICodePack-Shell"
-        IsAssemblyLoaded ("Microsoft.WindowsAPICodePack") | should be $true
-        IsAssemblyLoaded ("Microsoft.WindowsAPICodePack.Shell") | should be $true
+    if ($result -and ![String]::IsNullOrEmpty($Version)){
+        #TODO:VersionCheck
     }
 
-    TestCase "NuGet.Server"{
-        Use-NuGetPackage -PackageId "NuGet.Server"
-        IsAssemblyLoaded ("Microsoft.Web.XmlTransform") | should be $true
-        IsAssemblyLoaded ("Elmah") | should be $true
-        IsAssemblyLoaded ("Ninject") | should be $true
-        IsAssemblyLoaded ("RouteMagic") | should be $true
-        IsAssemblyLoaded ("Microsoft.Web.Infrastructure") | should be $true
-        IsAssemblyLoaded ("WebActivatorEx") | should be $true
-        IsAssemblyLoaded ("System.ServiceModel.Web") | should be $true
-        IsAssemblyLoaded ("NuGet.Server") | should be $true
-    }
-
-    TestCase "Tx.Windows"{
-        Use-NuGetPackage -PackageId "Tx.Windows"
-        IsAssemblyLoaded ("System.Reactive.Interfaces") | should be $true
-        IsAssemblyLoaded ("System.Reactive.Core") | should be $true
-        IsAssemblyLoaded ("System.Reactive.Linq") | should be $true
-        IsAssemblyLoaded ("System.Reactive.PlatformServices") | should be $true
-        IsAssemblyLoaded ("Tx.Core") | should be $true
-        IsAssemblyLoaded ("Tx.Windows") | should be $true
-    }
-
-    TestCase "LiveSDK"{
-        Use-NuGetPackage -PackageId "LiveSDK"
-        IsAssemblyLoaded ("System.Net") | should be $true
-        IsAssemblyLoaded ("Microsoft.Threading.Tasks") | should be $true
-        IsAssemblyLoaded ("Microsoft.Threading.Tasks.Extensions") | should be $true
-        IsAssemblyLoaded ("Microsoft.Live") | should be $true
-    }
-
-    TestCase "Microsoft.IdentityModel.Clients.ActiveDirectory"{
-        Use-NuGetPackage -PackageId "Microsoft.IdentityModel.Clients.ActiveDirectory"
-        IsAssemblyLoaded ("System.Net") | should be $true
-        IsAssemblyLoaded ("Microsoft.IdentityModel.Clients.ActiveDirectory") | should be $true
-        IsAssemblyLoaded ("Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms") | should be $true
-    }
-
-    TestCase "StackExchange.Redis"{
-        Use-NuGetPackage -PackageId "StackExchange.Redis"
-        IsAssemblyLoaded ("StackExchange.Redis") | should be $true
-    }
-
+    return $result
 }
+#endregion
 
+Describe "Install NuGet Package(.NET)" {
+    It "Install RazorMachine"{
+        Use-NuGetPackage -PackageId "RazorMachine"
+        IsAssemblyLoaded ("Xipton.Razor") | Should Be $true
+        IsAssemblyLoaded ("System.Web.Razor") | Should Be $true
+    }
+    
+    It "Install ClosedXML"{
+        Use-NuGetPackage -PackageId "ClosedXML"
+        IsAssemblyLoaded ("DocumentFormat.OpenXml") | Should Be $true
+        IsAssemblyLoaded ("ClosedXML") | Should Be $true
+    }
+    
+    It "Install Windows7APICodePack-Shell"{
+        Use-NuGetPackage -PackageId "Windows7APICodePack-Shell"
+        IsAssemblyLoaded ("Microsoft.WindowsAPICodePack") | Should Be $true
+        IsAssemblyLoaded ("Microsoft.WindowsAPICodePack.Shell") | Should Be $true
+    }
+
+    It "Install NuGet.Server"{
+        Use-NuGetPackage -PackageId "NuGet.Server"
+        IsAssemblyLoaded ("Microsoft.Web.XmlTransform") | Should Be $true
+        IsAssemblyLoaded ("Elmah") | Should Be $true
+        IsAssemblyLoaded ("Ninject") | Should Be $true
+        IsAssemblyLoaded ("RouteMagic") | Should Be $true
+        IsAssemblyLoaded ("Microsoft.Web.Infrastructure") | Should Be $true
+        IsAssemblyLoaded ("WebActivatorEx") | Should Be $true
+        IsAssemblyLoaded ("System.ServiceModel.Web") | Should Be $true
+        IsAssemblyLoaded ("NuGet.Server") | Should Be $true
+    }
+
+    It "Install Tx.Windows"{
+        Use-NuGetPackage -PackageId "Tx.Windows"
+        IsAssemblyLoaded ("System.Reactive.Interfaces") | Should Be $true
+        IsAssemblyLoaded ("System.Reactive.Core") | Should Be $true
+        IsAssemblyLoaded ("System.Reactive.Linq") | Should Be $true
+        IsAssemblyLoaded ("System.Reactive.PlatformServices") | Should Be $true
+        IsAssemblyLoaded ("Tx.Core") | Should Be $true
+        IsAssemblyLoaded ("Tx.Windows") | Should Be $true
+    }
+
+    It "Install LiveSDK"{
+        Use-NuGetPackage -PackageId "LiveSDK"
+        IsAssemblyLoaded ("System.Net") | Should Be $true
+        IsAssemblyLoaded ("Microsoft.Threading.Tasks") | Should Be $true
+        IsAssemblyLoaded ("Microsoft.Threading.Tasks.Extensions") | Should Be $true
+        IsAssemblyLoaded ("Microsoft.Live") | Should Be $true
+    }
+
+    It "Install Microsoft.IdentityModel.Clients.ActiveDirectory"{
+        Use-NuGetPackage -PackageId "Microsoft.IdentityModel.Clients.ActiveDirectory"
+        IsAssemblyLoaded ("System.Net") | Should Be $true
+        IsAssemblyLoaded ("Microsoft.IdentityModel.Clients.ActiveDirectory") | Should Be $true
+        IsAssemblyLoaded ("Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms") | Should Be $true
+    }
+
+    It "Install StackExchange.Redis"{
+        Use-NuGetPackage -PackageId "StackExchange.Redis"
+        IsAssemblyLoaded ("StackExchange.Redis") | Should Be $true
+    }
+}

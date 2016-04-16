@@ -1,4 +1,3 @@
 @echo off
-powershell.exe -ExecutionPolicy RemoteSigned -Command "[Console]::SetBufferSize(1000, 3000)"
-powershell.exe -ExecutionPolicy RemoteSigned -Command "Invoke-Tests -Recurse"
+powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -Command "Import-Module -Name Pester ; Invoke-Pester -Path '%~dp0'"
 pause
