@@ -52,13 +52,22 @@
         Write-Verbose ($messages.PackageInstalled -f $package.ToString())
     }
 
-    #TODO:Need to determine exact FrameworkVersion
+    # Trying to detect FrameworkVersion using CLRVersion
+    # https://github.com/altrive/PSNuGet/issues/2
+    # http://stackoverflow.com/questions/12971881/how-to-reliably-detect-the-actual-net-4-5-version-installed
+
     [Runtime.Versioning.FrameworkName] $frameworkName = $null
-    switch ($PSVersionTable.PSVersion){
-        "3.0"{ $frameworkName = ".NETFramework,Version=v4.0" }
-        "4.0"{ $frameworkName = ".NETFramework,Version=v4.5" }
+    switch ($PSVersionTable.CLRVersion){
+        {$_.Major -eq 4 -and $_.Build -eq 30319} {
+            if ($_.Revision -lt 17626) {
+                $frameworkName = ".NETFramework,Version=v4.0"
+            } else {
+                $frameworkName = ".NETFramework,Version=v4.5"
+            }
+        }
         default{ $frameworkName = [NuGet.VersionUtility]::DefaultTargetFramework }
     }
+
 
     #Load dependent NuGet packages first
     foreach ($dependency in [NuGet.PackageExtensions]::GetCompatiblePackageDependencies($package, $frameworkName))
