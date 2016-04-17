@@ -6,7 +6,7 @@
         [string] $Version = $null
     )
 
-    #Initialize packagemanaer if not explicitly called
+    #Initialize packagemanager if not explicitly called
     if ($script:PackageManager -eq $null){
         Initialize-NuGetPackageManager -Verbose
     }

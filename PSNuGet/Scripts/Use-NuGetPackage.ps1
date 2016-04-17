@@ -14,7 +14,7 @@
     #Add NuGet package Id to script variable
     $Script:LoadedPackageNames.Add($PackageId)
 
-    #Initialize packagemanaer if not explicitly called
+    #Initialize packagemanager if not explicitly called
     if ($script:PackageManager -eq $null){
         Initialize-NuGetPackageManager -Verbose
     }
